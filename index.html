@@ -26,15 +26,25 @@
             } else {
                 // 메시지가 문자열인 경우, 직접 표시
                 const message = document.createElement('p');
-                message.textContent = event.data;
+                message.textContent =event.data;
                 chat.appendChild(message);
             }
         };
 
+        
+        
+
         function sendMessage() {
-            const message = messageInput.value;
+            var today = new Date();   
+
+            var hours = ('0' + today.getHours()).slice(-2); 
+            var minutes = ('0' + today.getMinutes()).slice(-2);
+            var seconds = ('0' + today.getSeconds()).slice(-2); 
+            
+            var timeString = hours + ':' + minutes  + ':' + seconds+' ';
+            const message = timeString + messageInput.value;
             ws.send(message);
-            messageInput.value = '';
+            messageInput.value ='';
         }
     </script>
 </body>
