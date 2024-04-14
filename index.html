@@ -5,13 +5,15 @@
 </head>
 <body>
     <div id="chat"></div>
-    <input type="text" id="messageInput" placeholder="Type a message...">
+    <div class="user-container">Nickname : <input type="text" id="nickname"/></div>
+    <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
     <button onclick="sendMessage()">Send</button>
 
     <script>
         const ws = new WebSocket('ws://localhost:8080');
         const chat = document.getElementById('chat');
         const messageInput = document.getElementById('messageInput');
+        const nicknameInput = document.getElementById('nickname');
 
         ws.onmessage = function(event) {
             // event.data가 Blob 인스턴스일 경우 FileReader를 사용해서 읽어오기
@@ -32,9 +34,15 @@
         };
 
         function sendMessage() {
-            const message = messageInput.value;
+            const nickname = nicknameInput.value;
+            const message = nickname + " : " + messageInput.value;
             ws.send(message);
             messageInput.value = '';
+        }
+        function handleKeyPress(event) {
+            if (event.keyCode == 13){
+                sendMessage();
+            }
         }
     </script>
 </body>

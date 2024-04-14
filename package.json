@@ -1,0 +1,23 @@
+{
+  "name": "sw_chat",
+  "version": "1.0.0",
+  "description": "SW 설계, 조별과제",
+  "main": "chat.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/M1nKyu/SW_chat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/M1nKyu/SW_chat/issues"
+  },
+  "homepage": "https://github.com/M1nKyu/SW_chat#readme",
+  "dependencies": {
+    "ws": "^8.16.0"
+  }
+}
