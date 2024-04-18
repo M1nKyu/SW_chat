@@ -3,35 +3,21 @@
 <head>
     <title>Chat App</title>
 </head>
-<style>
-    body{
-        background-color : #F8A092;
-        text-align: center;
-    }
-    button{
-        position: absolute;
-        background-color: #0a0a23;
-        color: #fff;
-        border:none;
-        border-radius:10px;
-    }
-    button:hover{
-        background-color : #002ead;
-        transition: 0.7s;
-    }
-</style>
 <body>
-    <table id="chatTable" border="1" style="background-color: yellow;"> 
+    <table id="chatTable" border="1" style="background-color: yellow;">
     </table>
-    <input type="text" id="messageInput" placeholder="메시지를 입력하세요..."> 
-    <button onclick="sendMessage()">전송</button> 
+    <div class="user-container">Nickname : <input type="text" id="nickname"/></div>
+    <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+    <button onclick="sendMessage()">전송</button>
 
     <script>
         const ws = new WebSocket('ws://localhost:8080');
-        const chatTable = document.getElementById('chatTable'); 
-        const messageInput = document.getElementById('messageInput'); 
+        const chat = document.getElementById('chatTable');
+        const messageInput = document.getElementById('messageInput');
+        const nicknameInput = document.getElementById('nickname');
 
         ws.onmessage = function(event) {
+            // event.data가 Blob 인스턴스일 경우 FileReader를 사용해서 읽어오기
             if (event.data instanceof Blob) {
                 const reader = new FileReader();
                 reader.onload = function() {
@@ -41,29 +27,38 @@
                 };
                 reader.readAsText(event.data);
             } else {
+                // 메시지가 문자열인 경우, 직접 표시
                 const message = document.createElement('p');
                 message.textContent = event.data;
                 appendMessageToTable(message);
             }
         };
 
-        function sendMessage() {
-            var today = new Date();   
-            var hours = ('0' + today.getHours()).slice(-2); 
+        function sendMessage()
+        {
+            var today = new Date();
+            var hours = ('0' + today.getHours()).slice(-2);
             var minutes = ('0' + today.getMinutes()).slice(-2);
-            var seconds = ('0' + today.getSeconds()).slice(-2); 
+            var seconds = ('0' + today.getSeconds()).slice(-2);
             var timeString = hours + ':' + minutes  + ':' + seconds+' ';
 
-            const message = timeString + messageInput.value;
+            const nickname = nicknameInput.value;
+            const message = timeString + nickname + " : " + messageInput.value;
             ws.send(message);
-            messageInput.value = ''; 
+            messageInput.value = '';
+        }
+        function handleKeyPress(event) {
+                    if (event.keyCode == 13){
+                        sendMessage();
+                    }
+                }
+        function appendMessageToTable(messageElement) {
+                    const row = chat.insertRow(-1);
+                    const cell = row.insertCell(0);
+                    cell.appendChild(messageElement);
         }
 
-        function appendMessageToTable(messageElement) {
-            const row = chatTable.insertRow(-1); 
-            const cell = row.insertCell(0); 
-            cell.appendChild(messageElement);
-        }
     </script>
 </body>
 </html>
+
